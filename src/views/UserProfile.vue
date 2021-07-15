@@ -8,6 +8,7 @@
         <div class="user-profile_admin-badge" v-else>
           Not Admin
         </div>
+        <h3> user id: {{ userId }} </h3>
         <div class="user-profile_follower-count">
             <strong>Followers: </strong> {{ state.followers }}
         </div>
@@ -44,6 +45,7 @@
 <script>
 import { onMounted, reactive, watch} from 'vue';
 import { useRoute } from 'vue-router';
+import { users } from "../assets/users"
 import { computed } from 'vue';
 
 import Twoot from '../components/Twoot'
@@ -54,20 +56,16 @@ export default {
     Twoot
   },
   setup() {
+    const route = useRoute();
+    const userId = computed( () => route.params.userId);
+
+    //if (userId) fetchUserFrom Backend api(userId)
+
+    const newTwootCharacterCount = computed( () => state.newTwoot.length )
+
     const state = reactive({
       followers: 0,
-      user: {
-        id: 1,
-        username: '_chrisBalcita001',
-        firstName: 'Christopher',
-        lastName: 'Balcita',
-        email: 'chris.x2pher@gmail.com',
-        isAdmin: true,
-        twoots: [
-          { id: 1, content: "Twotter is cool! "},
-          { id: 2, content: "Don't forget to subscribe here! "}
-        ]
-      },
+      user: users[userId.value-1] || users[0],
       newTwoot: '',
       selectedTwootType: 'instant',
       twootTypes: [
@@ -75,9 +73,8 @@ export default {
         {value: 'instant', name: 'Instant Twoot'}
       ]
     });
-    const route = useRoute();
-    const userId = computed( () => route.params.userId);
-    const newTwootCharacterCount = computed( () => state.newTwoot.length )
+
+
 
     watch(
       () => state.followers,
